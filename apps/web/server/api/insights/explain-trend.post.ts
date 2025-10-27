@@ -1,58 +1,76 @@
+import { openai } from '@ai-sdk/openai';
+import { streamText } from 'ai';
+
 import { getServerSession } from '#auth';
-import { createOpenAIClient, redact } from '@budget-habits/llm';
+import { redact } from '@budget-habits/llm';
 import { insightExplainTrendRequestSchema } from '@budget-habits/schemas';
 import { assertRateLimit } from '@budget-habits/server-utils';
-import { withSSE } from '@budget-habits/sse';
 import { assertSchema } from '@budget-habits/validation';
 
-const client = createOpenAIClient();
+export default defineEventHandler(async (event) => {
+  const session = await getServerSession(event);
+  const userId = (session?.user as any)?.id;
+  if (!userId) throw createError({ statusCode: 401, statusMessage: 'Unauthorized' });
 
-export default defineEventHandler(
-  withSSE(
-    async (event) => {
-      const session = await getServerSession(event);
-      const userId = (session?.user as any)?.id;
-      if (!userId) throw createError({ statusCode: 401, statusMessage: 'Unauthorized' });
+  const body = await readBody(event);
+  const payload = assertSchema(insightExplainTrendRequestSchema, body);
+  assertRateLimit(userId);
 
-      const body = await readBody(event);
-      const payload = assertSchema(insightExplainTrendRequestSchema, body);
-      assertRateLimit(userId);
+  const redacted = redact(payload);
 
-      const redacted = redact(payload);
+  const result = streamText({
+    model: openai('gpt-4o-mini'),
+    system: `Вы финансовый аналитик. Анализируйте финансовые данные и предоставляйте структурированные отчёты на русском языке.
 
-      const stream = await client.generate({
-        system: `Analyze financial trends for the period: ${payload.period}.
-Focus on spending patterns, income trends, and key financial insights.
-Provide concise markdown analysis with specific data points and actionable recommendations.
-Respond in Russian.`,
-        messages: [
-          {
-            role: 'user',
-            content: `Проанализируйте финансовые тренды за ${payload.period} на основе следующих транзакций:
+ВАЖНО: Используйте правильное markdown форматирование:
+- Заголовки: ## для основных разделов, ### для подразделов
+- Списки: используйте - для маркированных списков, ОБЯЗАТЕЛЬНО с пустой строкой перед списком
+- Выделение: **жирный** для важных цифр и показателей
+- Параграфы: ОБЯЗАТЕЛЬНО разделяйте блоки текста пустыми строками
+- Таблицы: используйте правильный markdown синтаксис с | и разделителями
+
+Пример правильного форматирования:
+
+## Заголовок
+
+Текст параграфа.
+
+- Элемент списка 1
+- Элемент списка 2
+
+Следующий параграф.`,
+    messages: [
+      {
+        role: 'user',
+        content: `Проанализируйте финансовые тренды за **${payload.period}** на основе следующих транзакций:
 
 ${JSON.stringify(redacted, null, 2)}
 
-Пожалуйста, проанализируйте:
-1. Общие тренды доходов и расходов
-2. Категории с наибольшими тратами
-3. Изменения в финансовом поведении
-4. Конкретные рекомендации по оптимизации бюджета
+Создайте структурированный отчёт в формате markdown со следующими разделами:
 
-Предоставьте анализ в виде структурированного markdown с конкретными цифрами и выводами.`,
-          },
-        ],
-        stream: true,
-      });
+## 📊 Ключевые показатели
 
-      return stream as AsyncIterable<string>;
-    },
-    {
-      eventName: 'token',
-      heartbeatMs: 15000,
-      onEnd: async () => {
-        // ⚠ сюда не протащили payload/userId; если нужно — замкни их во внешнем scope
-        // пример: перенеси withSSE внутрь defineEventHandler, чтобы иметь доступ
+- Всего транзакций
+- Доходы
+- Расходы
+- Чистый денежный поток
+
+## 📈 Анализ трендов
+
+Опишите основные тренды в доходах и расходах.
+
+## 💰 Структура расходов
+
+Разбейте расходы по категориям с процентами.
+
+## 🎯 Рекомендации
+
+Дайте 3-5 конкретных рекомендаций по оптимизации бюджета.
+
+ВАЖНО: Используйте пустые строки между разделами, списками и параграфами!`,
       },
-    }
-  )
-);
+    ],
+  });
+
+  return result.toTextStreamResponse();
+});

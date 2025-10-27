@@ -18,16 +18,15 @@
   "dependencies": {
     "@headlessui/vue": "^1.7.17",
     "@heroicons/vue": "^2.1.5",
-    "markdown-it": "^14.1.0",
-    "@types/markdown-it": "^14.1.2",
-    "markdown-it-emoji": "^3.0.0",
-    "@types/markdown-it-emoji": "^3.0.1",
+    "dompurify": "^3.3.0",
+    "marked": "^16.4.1",
     "vue": "^3.4.21"
   },
   "devDependencies": {
+    "@types/dompurify": "^3.0.5",
     "typescript": "^5.4.2",
-    "vue-tsc": "^2.0.6",
-    "vitest": "^1.5.3"
+    "vitest": "^1.5.3",
+    "vue-tsc": "^2.0.6"
   },
   "peerDependencies": {
     "tailwindcss": "^3.4.1"

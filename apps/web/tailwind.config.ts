@@ -8,6 +8,8 @@ export default {
     './layouts/**/*.{vue,js,ts}',
     './composables/**/*.{vue,js,ts}',
     './plugins/**/*.{js,ts}',
+    // Добавляем компоненты из packages/ui
+    '../../packages/ui/src/**/*.{vue,js,ts}',
   ],
   theme: {
     extend: {

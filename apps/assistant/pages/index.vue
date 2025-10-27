@@ -28,10 +28,26 @@
           </div>
           <div>
             <h1 class="text-xl font-bold text-slate-100">AI Ассистент</h1>
-            <p class="text-sm text-slate-400">Ваш персональный помощник</p>
+            <p class="text-sm text-slate-400">
+              <span class="inline-flex items-center gap-1">
+                <span>Модель:</span>
+                <span class="font-medium text-indigo-400">{{ selectedModel }}</span>
+              </span>
+            </p>
           </div>
         </div>
         <div class="flex items-center gap-3">
+          <select
+            v-model="selectedModel"
+            class="rounded-lg bg-slate-800/50 px-3 py-2 text-sm text-slate-200 border border-slate-700/50 focus:border-indigo-500 focus:outline-none transition-colors"
+          >
+            <option value="gpt-4o">🚀 GPT-4o (Самая мощная)</option>
+            <option value="gpt-4o-mini">⚡ GPT-4o Mini (Быстрая)</option>
+            <option value="gpt-4-turbo">🔥 GPT-4 Turbo</option>
+            <option value="gpt-3.5-turbo">💨 GPT-3.5 Turbo (Экономная)</option>
+            <option value="o1">🧠 O1 (Reasoning - медленная)</option>
+            <option value="o1-mini">🤔 O1-Mini (Reasoning - медленная)</option>
+          </select>
           <select
             v-model="locale"
             class="rounded-lg bg-slate-800/50 px-3 py-2 text-sm text-slate-200 border border-slate-700/50 focus:border-indigo-500 focus:outline-none transition-colors"
@@ -51,6 +67,61 @@
       >
         <MessageList :messages="messages as Message[]" />
       </section>
+
+      <!-- O1 Thinking Indicator -->
+      <div
+        v-if="isLoading && isO1Model"
+        class="rounded-2xl border border-purple-500/30 bg-purple-900/20 p-4 backdrop-blur-sm"
+      >
+        <div class="flex items-center gap-3 text-purple-400">
+          <svg
+            class="h-5 w-5 flex-shrink-0 animate-spin"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+            />
+          </svg>
+          <span class="text-sm font-medium">O1 модель размышляет... (может занять до 30 сек)</span>
+        </div>
+      </div>
+
+      <!-- Model Changed Notification -->
+      <Transition
+        enter-active-class="transition ease-out duration-300"
+        enter-from-class="opacity-0 transform translate-y-2"
+        enter-to-class="opacity-100 transform translate-y-0"
+        leave-active-class="transition ease-in duration-200"
+        leave-from-class="opacity-100 transform translate-y-0"
+        leave-to-class="opacity-0 transform translate-y-2"
+      >
+        <div
+          v-if="modelChanged"
+          class="rounded-2xl border border-indigo-500/30 bg-indigo-900/20 p-4 backdrop-blur-sm"
+        >
+          <div class="flex items-center gap-3 text-indigo-400">
+            <svg
+              class="h-5 w-5 flex-shrink-0"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 10V3L4 14h7v7l9-11h-7z"
+              />
+            </svg>
+            <span class="text-sm font-medium">Модель изменена на {{ selectedModel }}</span>
+          </div>
+        </div>
+      </Transition>
 
       <!-- Error Message -->
       <div
@@ -81,7 +152,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 import type { Message } from '@budget-habits/schemas';
 
@@ -89,6 +160,20 @@ import ChatInput from '../components/Chat/ChatInput.vue';
 import MessageList from '../components/Chat/MessageList.vue';
 import { useChat } from '../composables/useChat';
 
-const { messages, isLoading, error, sendMessage } = useChat();
+const { messages, isLoading, error, selectedModel, sendMessage } = useChat();
 const locale = ref('ru');
+const modelChanged = ref(false);
+
+// Проверяем является ли модель O1
+const isO1Model = computed(() => selectedModel.value.startsWith('o1'));
+
+// Показываем уведомление при смене модели
+watch(selectedModel, (newModel, oldModel) => {
+  if (oldModel && newModel !== oldModel) {
+    modelChanged.value = true;
+    setTimeout(() => {
+      modelChanged.value = false;
+    }, 2000);
+  }
+});
 </script>

@@ -1,7 +1,9 @@
+import { openai } from '@ai-sdk/openai';
 import { PrismaClient } from '@prisma/client';
+import { generateText } from 'ai';
 
 import { getServerSession } from '#auth';
-import { createMockClient, createOpenAIClient, redact } from '@budget-habits/llm';
+import { redact } from '@budget-habits/llm';
 import {
   insightAutotagRequestSchema,
   insightAutotagResponseSchema,
@@ -11,8 +13,6 @@ import { assertRateLimit, logInsight } from '@budget-habits/server-utils';
 import { assertSchema } from '@budget-habits/validation';
 
 const prisma = new PrismaClient();
-
-const client = process.env.OPENAI_API_KEY ? createOpenAIClient() : createMockClient();
 
 export default defineEventHandler(async (event) => {
   const session = await getServerSession(event);
@@ -32,23 +32,25 @@ export default defineEventHandler(async (event) => {
     })
   );
 
-  const response = await client.generate({
-    system: 'You are a finance assistant. Suggest categories for transactions.',
+  const { text } = await generateText({
+    model: openai('gpt-4o-mini'),
+    system:
+      'You are a finance assistant. Suggest categories for transactions. Return ONLY valid JSON array.',
     messages: [
       {
         role: 'user',
-        content: `Suggest categories for: ${JSON.stringify(redacted)}`,
+        content: `Suggest categories for these transactions: ${JSON.stringify(redacted)}`,
       },
     ],
   });
 
-  const raw = typeof response === 'string' ? response : '[]';
   try {
-    const json = JSON.parse(raw);
+    const json = JSON.parse(text);
     const result = assertSchema(insightAutotagResponseSchema, json);
     await logInsight(prisma, { userId: session.user.id, type: 'autotag', payload });
     return result;
   } catch (error) {
+    console.error('Autotag parse error:', error);
     return [];
   }
 });

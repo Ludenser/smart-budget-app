@@ -11,12 +11,13 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^2.0.54",
     "@budget-habits/composables": "workspace:*",
     "@budget-habits/llm": "workspace:*",
     "@budget-habits/schemas": "workspace:*",
-    "@budget-habits/sse": "workspace:*",
     "@budget-habits/ui": "workspace:*",
     "@budget-habits/validation": "workspace:*",
+    "ai": "^5.0.81",
     "@nuxtjs/i18n": "^9.0.0",
     "@pinia/nuxt": "^0.5.1",
     "@vueuse/core": "^10.9.0",

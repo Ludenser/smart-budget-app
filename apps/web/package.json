@@ -17,11 +17,11 @@
     "prisma:push": "prisma db push --schema prisma/schema.prisma"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^2.0.54",
     "@budget-habits/composables": "workspace:*",
     "@budget-habits/llm": "workspace:*",
     "@budget-habits/schemas": "workspace:*",
     "@budget-habits/server-utils": "workspace:*",
-    "@budget-habits/sse": "workspace:*",
     "@budget-habits/ui": "workspace:*",
     "@budget-habits/validation": "workspace:*",
     "@headlessui/vue": "^1.7.17",
@@ -35,6 +35,7 @@
     "@vee-validate/zod": "^4.12.2",
     "@vite-pwa/nuxt": "^0.9.0",
     "@vueuse/core": "^10.9.0",
+    "ai": "^5.0.81",
     "chart.js": "^4.4.3",
     "date-fns": "^3.5.0",
     "defu": "^6.1.4",

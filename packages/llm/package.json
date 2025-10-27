@@ -19,10 +19,7 @@
     "test": "vitest",
     "dev": "tsup src/index.ts --format esm,cjs --dts --watch"
   },
-  "dependencies": {
-    "eventsource-parser": "^1.1.0",
-    "openai": "^4.52.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "tsup": "^7.2.0",
     "typescript": "^5.4.2",

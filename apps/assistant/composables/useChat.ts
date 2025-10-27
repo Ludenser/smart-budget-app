@@ -13,6 +13,7 @@ export const useChat = () => {
 
   const isLoading = ref(false);
   const error = ref<string | null>(null);
+  const selectedModel = ref('gpt-4o-mini');
 
   const sendMessage = async (content: string) => {
     if (!content.trim() || isLoading.value) return;
@@ -42,6 +43,7 @@ export const useChat = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          model: selectedModel.value,
           messages: messages.value.slice(0, -1).map((msg) => ({
             role: msg.role,
             content: msg.content,
@@ -49,33 +51,34 @@ export const useChat = () => {
         }),
       });
 
-      if (!response.body) throw new Error('No response body');
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
 
+      if (!response.body) {
+        throw new Error('No response body');
+      }
+
+      // AI SDK возвращает простой текстовый поток (toTextStreamResponse)
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
 
+      // Сбрасываем начальное значение "..."
+      messages.value[messageIndex].content = '';
+
+      let totalChunks = 0;
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
 
-        const chunk = decoder.decode(value, { stream: true });
-        const lines = chunk.split('\n');
-
-        for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            const data = line.slice(6);
-            if (data) {
-              // Если это первый чанк, заменяем "..." на данные
-              if (messages.value[messageIndex].content === '...') {
-                messages.value[messageIndex].content = data;
-              } else {
-                // Иначе добавляем к существующему контенту
-                messages.value[messageIndex].content += data;
-              }
-            }
-          }
-        }
+        const text = decoder.decode(value, { stream: true });
+        totalChunks++;
+        messages.value[messageIndex].content += text;
       }
+
+      console.log(
+        `[useChat] Stream complete. Total chunks: ${totalChunks}, Final length: ${messages.value[messageIndex].content.length}`
+      );
     } catch (err) {
       console.error('Chat error:', err);
       error.value = 'Произошла ошибка при отправке сообщения. Попробуйте еще раз.';
@@ -107,6 +110,7 @@ export const useChat = () => {
     messages: readonly(messages),
     isLoading: readonly(isLoading),
     error: readonly(error),
+    selectedModel,
     sendMessage,
     clearMessages,
   };

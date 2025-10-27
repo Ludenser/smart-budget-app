@@ -47,5 +47,9 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^2.0.54",
+    "ai": "^5.0.81"
   }
 }

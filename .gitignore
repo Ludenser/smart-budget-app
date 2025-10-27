@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+
+# Builds
+dist/
+.nuxt/
+.output/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor
+.idea/
+.vscode/
+
+# Env
+.env
+.env.*
+
+# Prisma
+*.db
+*.db-journal
+
+# Cache
+.turbo/
+.pnpm-store/
+
+# Tests
+playwright-report/
+test-results/
+.nyc_output/
+
+# Coverage
+coverage/
+
+# Misc
+*.local
+

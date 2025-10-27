@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"typescript.tsdk": "node_modules/typescript/lib",
+		"typescript.enablePromptUseWorkspaceTsdk": true,
+		"files.associations": {
+			"*.css": "tailwindcss"
+		},
+		"typescript.format.enable": false,
+		"javascript.format.enable": false,
+		"nuxt.isNuxtApp": false
+	}
+}

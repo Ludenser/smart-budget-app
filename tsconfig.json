@@ -1,0 +1,12 @@
+{
+  "files": [],
+  "references": [
+    { "path": "apps/web" },
+    { "path": "apps/assistant" },
+    { "path": "packages/schemas" },
+    { "path": "packages/ui" },
+    { "path": "packages/llm" },
+    { "path": "packages/sse" },
+    { "path": "packages/validation" }
+  ]
+}

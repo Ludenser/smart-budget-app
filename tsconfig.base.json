@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@budget-habits/schemas": ["packages/schemas/src"],
+      "@budget-habits/ui": ["packages/ui/src"],
+      "@budget-habits/llm": ["packages/llm/src"],
+      "@budget-habits/sse": ["packages/sse/src"],
+      "@budget-habits/validation": ["packages/validation/src"],
+      "@budget-habits/composables": ["packages/composables/src"],
+      "@budget-habits/server-utils": ["packages/server-utils/src"]
+    }
+  }
+}

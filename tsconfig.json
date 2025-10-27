@@ -7,6 +7,8 @@
     { "path": "packages/ui" },
     { "path": "packages/llm" },
     { "path": "packages/sse" },
-    { "path": "packages/validation" }
+    { "path": "packages/validation" },
+    { "path": "packages/composables" },
+    { "path": "packages/server-utils" }
   ]
 }

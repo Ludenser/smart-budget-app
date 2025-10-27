@@ -16,20 +16,22 @@ export default defineEventHandler(async (event) => {
     orderBy: { date: 'desc' },
   });
 
+  type TransactionWithCategory = (typeof transactions)[number];
+
   // Считаем статистику
   const income = transactions
-    .filter((t) => Number(t.amount) > 0)
-    .reduce((sum: number, t) => sum + Number(t.amount), 0);
+    .filter((t: TransactionWithCategory) => Number(t.amount) > 0)
+    .reduce((sum: number, t: TransactionWithCategory) => sum + Number(t.amount), 0);
 
   const expense = transactions
-    .filter((t) => Number(t.amount) < 0)
-    .reduce((sum: number, t) => sum + Math.abs(Number(t.amount)), 0);
+    .filter((t: TransactionWithCategory) => Number(t.amount) < 0)
+    .reduce((sum: number, t: TransactionWithCategory) => sum + Math.abs(Number(t.amount)), 0);
 
   const balance = income - expense;
 
   // Группируем по категориям
   const byCategory = transactions.reduce(
-    (acc: Record<string, number>, t) => {
+    (acc: Record<string, number>, t: TransactionWithCategory) => {
       const name = t.category?.name || 'Без категории';
       if (!acc[name]) acc[name] = 0;
       acc[name] += Math.abs(Number(t.amount));
@@ -48,7 +50,9 @@ export default defineEventHandler(async (event) => {
     .join('\n');
 
   // Генерируем insights
-  const expenseCount = transactions.filter((t) => Number(t.amount) < 0).length;
+  const expenseCount = transactions.filter(
+    (t: TransactionWithCategory) => Number(t.amount) < 0
+  ).length;
   const insights =
     transactions.length > 0
       ? `## Статистика за период "${share.period}"\n\n### Топ категорий\n${topCategories}\n\n### Анализ\n- Всего транзакций: ${transactions.length}\n- Средний расход: ${new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(expense / Math.max(expenseCount, 1))}`

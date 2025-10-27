@@ -5,9 +5,11 @@
       "cache": false
     },
     "lint": {
+      "dependsOn": ["^build"],
       "outputs": []
     },
     "typecheck": {
+      "dependsOn": ["^build"],
       "outputs": []
     },
     "build": {
@@ -15,6 +17,7 @@
       "outputs": ["dist/**", ".nuxt/**"]
     },
     "test": {
+      "dependsOn": ["^build"],
       "outputs": []
     },
     "test:e2e": {

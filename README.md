@@ -1,14 +1,14 @@
 # Budget & Habits Monorepo
 
-Моно-репозиторий на базе pnpm/turbo с двумя Nuxt 3 приложениями: `apps/web` (финансовый дашборд с привычками) и `apps/assistant` (LLM-клиент для инсайтов и автотегов). Общие пакеты (`packages/*`) содержат zod-схемы, UI-компоненты и абстракции работы с LLM.
+Моно-репозиторий на базе pnpm/turbo с двумя Nuxt 3 приложениями: `apps/web` (финансовый дашборд с контролем привычек) и `apps/assistant` (LLM-клиент для инсайтов и автотегов). Общие пакеты (`packages/*`) содержат zod-схемы, UI-компоненты и абстракции работы с LLM.
 
 ## Основные возможности
 
-- SSR Nuxt 3, международзация (ru/en), авторизация через GitHub OAuth (Auth.js).
+- SSR Nuxt 3, i18n (ru/en), авторизация через GitHub OAuth (Auth.js).
 - Финансовые CRUD-операции, импорт CSV, типобезопасные формы на Vee-Validate + Zod.
 - Pinia со state persistence, realtime через Nitro WebSocket `/api/rt`, оффлайн PWA с фоновой синхронизацией.
 - Публичные отчёты с ISR и SEO-метаданными.
-- LLM-интеграция (OpenAI или mock-провайдер), стриминг ответов через SSE.
+- LLM-интеграция (OpenAI), стриминг ответов через SSE.
 - Тесты: Vitest (юнит) + Playwright (e2e); CI на GitHub Actions.
 
 ## Структура
@@ -61,13 +61,7 @@ pnpm -r dev
 - `pnpm lint` / `pnpm typecheck` – статический анализ.
 - `pnpm test` / `pnpm test:e2e` – Vitest и Playwright.
 - `pnpm -r prisma:generate` – генерирует Prisma client.
-
-## Тесты и качество
-
-- Vitest + Vue Testing Library для composables и серверных обработчиков.
-- Playwright сценарии: дашборд, оффлайн синхронизация, публичный отчёт.
-- Husky + lint-staged + commitlint обеспечивают единый стандарт кода.
-
+- 
 ## CI/CD
 
 `.github/workflows/ci.yml` запускает lint → typecheck → test → build на GitHub Actions с кэшированием pnpm.

@@ -1,0 +1,13 @@
+{
+  "common": {
+    "title": "Budget & Habits",
+    "dashboard": "Дашборд",
+    "transactions": "Транзакции",
+    "habits": "Привычки",
+    "profile": "Профиль",
+    "assistant": "Ассистент",
+    "login": "Войти",
+    "logout": "Выйти",
+    "welcome": "Добро пожаловать"
+  }
+}

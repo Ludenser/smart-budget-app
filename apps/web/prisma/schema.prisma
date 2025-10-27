@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  name      String?
+  image     String?
+  createdAt DateTime  @default(now())
+  categories Category[]
+  transactions Transaction[]
+  habits     Habit[]
+  rules      Rule[]
+  shares     ReportShare[]
+  insights   InsightAudit[]
+}
+
+model Category {
+  id        String     @id @default(uuid())
+  user      User       @relation(fields: [userId], references: [id])
+  userId    String
+  name      String
+  kind      String
+  color     String?
+  createdAt DateTime   @default(now())
+  transactions Transaction[]
+  rules      Rule[]
+}
+
+model Transaction {
+  id          String     @id @default(uuid())
+  user        User       @relation(fields: [userId], references: [id])
+  userId      String
+  amount      Decimal
+  currency    String
+  category    Category?  @relation(fields: [categoryId], references: [id])
+  categoryId  String?
+  description String? 
+  date        DateTime
+  createdAt   DateTime   @default(now())
+  source      String?    @default("manual")
+}
+
+model Habit {
+  id        String      @id @default(uuid())
+  user      User        @relation(fields: [userId], references: [id])
+  userId    String
+  title     String
+  createdAt DateTime    @default(now())
+  checks    HabitCheck[]
+}
+
+model HabitCheck {
+  id      String   @id @default(uuid())
+  habit   Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+  habitId String
+  date    DateTime
+  value   Boolean
+}
+
+model Rule {
+  id        String    @id @default(uuid())
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String
+  pattern   String
+  category  Category  @relation(fields: [categoryId], references: [id])
+  categoryId String
+  enabled    Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+}
+
+model ReportShare {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  token     String   @unique
+  period    String
+  createdAt DateTime @default(now())
+}
+
+model InsightAudit {
+  id        String       @id @default(uuid())
+  user      User         @relation(fields: [userId], references: [id])
+  userId    String
+  type      String
+  payload   String
+  tokensIn  Int?
+  tokensOut Int?
+  createdAt DateTime     @default(now())
+}
+

@@ -38,9 +38,19 @@
 <script setup lang="ts">
 import { MarkdownViewer } from '@budget-habits/ui';
 
+interface ReportData {
+  period: string;
+  incomeFormatted: string;
+  expenseFormatted: string;
+  balanceFormatted: string;
+  insights: string;
+}
+
 const { params } = useRoute();
 const { data: report } = await useAsyncData(`report-${params.id}`, () =>
-  $fetch(`/api/reports/${params.id}`, { headers: { 'x-public-token': params.id as string } })
+  $fetch<ReportData>(`/api/reports/${params.id}`, {
+    headers: { 'x-public-token': params.id as string },
+  })
 );
 
 const headTitle = computed(() => `Budget & Habits · Публичный отчет ${report.value?.period ?? ''}`);

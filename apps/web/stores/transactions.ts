@@ -35,7 +35,9 @@ export const useTransactionsStore = defineStore('transactions', {
             .filter(([, value]) => value !== null && value !== undefined && value !== '')
             .map(([key, value]) => [key, String(value)])
         );
-        const data = await $fetch(`/api/transactions?${query.toString()}`);
+        const data = await $fetch<{ transactions: unknown[]; total: number }>(
+          `/api/transactions?${query.toString()}`
+        );
         if (data) {
           this.items = data.transactions.map((item: unknown) => transactionSchema.parse(item));
           this.pagination.total = data.total ?? data.transactions.length;

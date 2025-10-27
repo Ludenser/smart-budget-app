@@ -19,17 +19,17 @@ export default defineEventHandler(async (event) => {
   // Считаем статистику
   const income = transactions
     .filter((t) => Number(t.amount) > 0)
-    .reduce((sum, t) => sum + Number(t.amount), 0);
+    .reduce((sum: number, t) => sum + Number(t.amount), 0);
 
   const expense = transactions
     .filter((t) => Number(t.amount) < 0)
-    .reduce((sum, t) => sum + Math.abs(Number(t.amount)), 0);
+    .reduce((sum: number, t) => sum + Math.abs(Number(t.amount)), 0);
 
   const balance = income - expense;
 
   // Группируем по категориям
   const byCategory = transactions.reduce(
-    (acc, t) => {
+    (acc: Record<string, number>, t) => {
       const name = t.category?.name || 'Без категории';
       if (!acc[name]) acc[name] = 0;
       acc[name] += Math.abs(Number(t.amount));
@@ -39,18 +39,19 @@ export default defineEventHandler(async (event) => {
   );
 
   const topCategories = Object.entries(byCategory)
-    .sort((a, b) => b[1] - a[1])
+    .sort((a, b) => (b[1] as number) - (a[1] as number))
     .slice(0, 5)
     .map(
       ([name, amount]) =>
-        `- ${name}: ${new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(amount)}`
+        `- ${name}: ${new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(amount as number)}`
     )
     .join('\n');
 
   // Генерируем insights
+  const expenseCount = transactions.filter((t) => Number(t.amount) < 0).length;
   const insights =
     transactions.length > 0
-      ? `## Статистика за период "${share.period}"\n\n### Топ категорий\n${topCategories}\n\n### Анализ\n- Всего транзакций: ${transactions.length}\n- Средний расход: ${new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(expense / Math.max(transactions.filter((t) => Number(t.amount) < 0).length, 1))}`
+      ? `## Статистика за период "${share.period}"\n\n### Топ категорий\n${topCategories}\n\n### Анализ\n- Всего транзакций: ${transactions.length}\n- Средний расход: ${new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(expense / Math.max(expenseCount, 1))}`
       : '## Нет данных\n\nЗа выбранный период транзакции отсутствуют.';
 
   return {

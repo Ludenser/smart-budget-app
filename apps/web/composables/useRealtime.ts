@@ -24,7 +24,7 @@ export const useRealtime = () => {
   };
 
   const connect = () => {
-    if (process.server || status.value !== 'authenticated') return;
+    if (import.meta.server || status.value !== 'authenticated') return;
     if (sockets.has('primary')) return;
 
     const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';

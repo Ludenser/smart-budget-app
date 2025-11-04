@@ -4,7 +4,7 @@ import { streamText } from 'ai';
 import { getServerSession } from '#auth';
 import { redact } from '@budget-habits/llm';
 import { insightExplainTrendRequestSchema } from '@budget-habits/schemas';
-import { assertRateLimit } from '@budget-habits/server-utils';
+import { RateLimiter } from '@budget-habits/server-utils';
 import { assertSchema } from '@budget-habits/validation';
 
 export default defineEventHandler(async (event) => {
@@ -14,9 +14,12 @@ export default defineEventHandler(async (event) => {
 
   const body = await readBody(event);
   const payload = assertSchema(insightExplainTrendRequestSchema, body);
-  assertRateLimit(userId);
+
+  const rateLimiter = new RateLimiter();
+  rateLimiter.check(userId);
 
   const redacted = redact(payload);
+  console.log('redacted', redacted);
 
   const result = streamText({
     model: openai('gpt-4o-mini'),

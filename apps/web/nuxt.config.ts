@@ -32,6 +32,15 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@sidebase/nuxt-auth',
   ],
+  auth: {
+    baseURL:
+      process.env.AUTH_ORIGIN ||
+      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined) ||
+      'http://localhost:3000',
+    provider: {
+      type: 'authjs',
+    },
+  },
   css: ['~/assets/css/tailwind.css'],
   postcss: {
     plugins: {

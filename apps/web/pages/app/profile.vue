@@ -77,11 +77,6 @@ definePageMeta({
   middleware: 'protected',
 });
 
-const { status } = useAuth();
-if (process.client && status.value !== 'authenticated') {
-  navigateTo('/login');
-}
-
 const preferences = usePreferencesStore();
 const shares = ref<Array<{ id: string; token: string; period: string }>>([]);
 const loading = ref(false);

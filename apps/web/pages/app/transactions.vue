@@ -169,11 +169,6 @@ definePageMeta({
   middleware: 'protected',
 });
 
-const { status } = useAuth();
-if (process.client && status.value !== 'authenticated') {
-  navigateTo('/login');
-}
-
 const transactionsStore = useTransactionsStore();
 const categoriesStore = useCategoriesStore();
 

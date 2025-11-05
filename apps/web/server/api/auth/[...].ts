@@ -12,6 +12,7 @@ export default NuxtAuthHandler({
   pages: {
     signIn: '/login',
   },
+  trustHost: true,
   providers: [
     // @ts-expect-error: Типы NextAuth
     GithubProvider.default({

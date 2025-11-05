@@ -39,6 +39,9 @@ export default defineNuxtConfig({
       'http://localhost:3000',
     provider: {
       type: 'authjs',
+      trustHost: true,
+      defaultProvider: 'credentials',
+      addDefaultCallbackUrl: '/app/dashboard',
     },
     globalAppMiddleware: false,
   },

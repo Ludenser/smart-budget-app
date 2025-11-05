@@ -40,6 +40,7 @@ export default defineNuxtConfig({
     provider: {
       type: 'authjs',
     },
+    globalAppMiddleware: false,
   },
   css: ['~/assets/css/tailwind.css'],
   postcss: {

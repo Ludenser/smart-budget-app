@@ -12,6 +12,14 @@
 <script setup lang="ts">
 import { BaseButton } from '@budget-habits/ui';
 
-const goToDashboard = () => navigateTo('/app/dashboard');
+const { status } = useAuth();
+
+const goToDashboard = () => {
+  if (status.value === 'authenticated') {
+    navigateTo('/app/dashboard');
+  } else {
+    navigateTo('/login');
+  }
+};
 const goToAssistant = () => navigateTo('http://localhost:3001');
 </script>

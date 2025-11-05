@@ -99,6 +99,18 @@ import { Line, Pie } from 'vue-chartjs';
 
 import { BaseButton, BaseCard } from '@budget-habits/ui';
 
+definePageMeta({
+  //@ts-expect-error - Custom middleware
+  middleware: 'protected',
+});
+
+const { status } = useAuth();
+
+// Защита страницы - перенаправление если не авторизован
+if (process.client && status.value !== 'authenticated') {
+  navigateTo('/login');
+}
+
 const AssistantDrawer = defineAsyncComponent(() => import('../../components/AssistantDrawer.vue'));
 
 ChartJS.register(

@@ -229,6 +229,16 @@ import { addDays, startOfWeek } from 'date-fns';
 
 import { BaseButton, BaseCard } from '@budget-habits/ui';
 
+definePageMeta({
+  // @ts-expect-error - Custom middleware
+  middleware: 'protected',
+});
+
+const { status } = useAuth();
+if (process.client && status.value !== 'authenticated') {
+  navigateTo('/login');
+}
+
 const habitsStore = useHabitsStore();
 
 const days = computed(() => {

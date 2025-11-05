@@ -61,7 +61,23 @@ pnpm -r dev
 - `pnpm lint` / `pnpm typecheck` – статический анализ.
 - `pnpm test` / `pnpm test:e2e` – Vitest и Playwright.
 - `pnpm -r prisma:generate` – генерирует Prisma client.
-- 
+-
+
 ## CI/CD
 
 `.github/workflows/ci.yml` запускает lint → typecheck → test → build на GitHub Actions с кэшированием pnpm.
+
+## 🚀 Деплой на Vercel
+
+Проект полностью готов к деплою на Vercel! Подробная инструкция находится в файле [VERCEL_DEPLOYMENT.md](./VERCEL_DEPLOYMENT.md).
+
+### Быстрый старт:
+
+1. Импортируйте проект в Vercel Dashboard
+2. Настройте переменные окружения (DATABASE_URL, OPENAI_API_KEY, AUTH_SECRET)
+3. Для каждого приложения укажите:
+   - **Web**: Root Directory: `apps/web`
+   - **Assistant**: Root Directory: `apps/assistant`
+4. Deploy!
+
+**База данных:** Проект переведен на PostgreSQL для продакшена. Рекомендуется использовать Vercel Postgres или Supabase.

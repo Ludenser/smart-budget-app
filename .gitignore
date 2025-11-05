@@ -40,3 +40,6 @@ coverage/
 # Misc
 *.local
 
+VERCEL_DEPLOYMENT.md
+DEPLOY_NOW.md
+DEVELOPMENT.md

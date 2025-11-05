@@ -1,0 +1,58 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Testing
+*.spec.ts
+*.test.ts
+tests/
+coverage/
+.playwright/
+
+# Documentation
+*.md
+!VERCEL_DEPLOYMENT.md
+DEVELOPMENT.md
+REFACTORING_SUMMARY.md
+QUICK_START.md
+
+# Git
+.git
+.gitignore
+.github
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Misc
+*.log
+.env.local
+.env.*.local
+dev.db
+dev.db-journal
+
+# Monorepo build artifacts (будут пересобраны)
+dist/
+.nuxt/
+.output/
+
+# Scripts
+start-apps.ps1
+start-apps.sh
+
+# Config files
+.husky
+.editorconfig
+.prettierrc
+.prettierignore
+commitlint.config.cjs
+playwright.config.ts
+

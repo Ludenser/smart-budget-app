@@ -62,9 +62,14 @@ export default defineNuxtConfig({
     },
     public: {
       defaultLocale: process.env.NUXT_I18N_DEFAULT_LOCALE || 'ru',
+      authOrigin:
+        process.env.AUTH_ORIGIN ||
+        (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined) ||
+        'http://localhost:3000',
     },
   },
   nitro: {
+    preset: 'vercel',
     experimental: {
       websocket: true,
     },

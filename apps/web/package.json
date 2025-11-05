@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "nuxt dev",
-    "build": "prisma generate --schema prisma/schema.prisma && nuxt build",
+    "build": "prisma generate --schema prisma/schema.prisma && prisma migrate deploy --schema prisma/schema.prisma && nuxt build",
     "preview": "nuxt preview",
     "lint": "eslint .",
     "typecheck": "nuxt typecheck",
@@ -16,7 +16,7 @@
     "prisma:deploy": "prisma migrate deploy --schema prisma/schema.prisma",
     "prisma:seed": "tsx prisma/seed.ts",
     "prisma:push": "prisma db push --schema prisma/schema.prisma",
-    "vercel-build": "prisma generate --schema prisma/schema.prisma && prisma migrate resolve --rolled-back 20241024120000_init --schema prisma/schema.prisma || true && prisma migrate deploy --schema prisma/schema.prisma && nuxt build"
+    "vercel-build": "echo 'Build handled by vercel.json buildCommand'"
   },
   "dependencies": {
     "@ai-sdk/openai": "^2.0.54",

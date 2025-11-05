@@ -1,6 +1,6 @@
 {
-  "buildCommand": "pnpm run vercel-build",
-  "installCommand": "pnpm install",
+  "buildCommand": "cd ../.. && pnpm install --frozen-lockfile && turbo run build --filter=@budget-habits/web... && cd apps/web && prisma migrate resolve --rolled-back 20241024120000_init --schema prisma/schema.prisma || true",
+  "installCommand": "echo 'Skipping default install'",
   "framework": "nuxtjs",
   "outputDirectory": ".output/public"
 }

@@ -1,6 +1,6 @@
 {
-  "buildCommand": "cd ../.. && pnpm run build --filter=@budget-habits/assistant",
-  "installCommand": "cd ../.. && pnpm install",
+  "buildCommand": "cd ../.. && pnpm install --frozen-lockfile && turbo run build --filter=@budget-habits/assistant...",
+  "installCommand": "echo 'Skipping default install'",
   "framework": "nuxtjs",
   "outputDirectory": ".output/public"
 }
